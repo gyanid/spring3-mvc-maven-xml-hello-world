@@ -1,34 +1,59 @@
-pipeline{
-    agent any
-      tools{
-         //install the maven version configured as "M3" and add it to the path
-         maven "maven3"
-      }
-    stages{
-      stage('SCM'){
-        steps{
-            // some code from repository
-git credentialsId: 'gyanid1IDgitdxc', url: 'https://github.com/gyandxc/spring3-mvc-maven-xml-hello-world.git'
-        }
-      }
-      stage('Build'){
-       steps{
-           //maven package
-           sh 'mvn package'
+pipeline {
+   agent any
+
+   tools {
+      // Install the Maven version configured as "M3" and add it to the path.
+      maven "maven"
+   }
+
+   stages {
+      stage('Build') {
+         steps {
+            // Get some code from a GitHub repository
+            git branch: 'test', changelog: false, credentialsId: 'git_jms_cre', poll: false, url: 'https://github.com/jmstechhome/spring3-mvc-maven-xml-hello-world.git'
+
+            // Run Maven on a Unix agent.
+            sh "mvn package"
+
+            // To run Maven on a Windows agent, use
+            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
          }
-      }
-      stage('Artifact'){
-       steps{
-           //Artifact package
-           archiveArtifacts 'target/*.war'
-         }
+        post {
+            // If Maven was able to run the tests, even if some of the test
+            // failed, record the test results and archive the jar file.
+            success {
+               archiveArtifacts 'target/*.war'
+            }
+			}
+
       }
       stage('deploy'){
-        steps{
-            withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential_ID', variable: 'tomcatcred')]) {
-                sh "curl -v -u ${tomcatcred} -T /var/lib/jenkins/workspace/tomcat_deploy_pipeline/target/spring3-mvc-maven-xml-hello-world-3.0-SNAPSHOT.war 'http://ec2-13-232-109-58.ap-south-1.compute.amazonaws.com:8080//manager/text/deploy?path=/pipeline_gyan&update=true'"
+          steps {
+              sh "sudo cp /var/lib/jenkins/workspace/web-pipeline/target/spring3-mvc-maven-xml-hello-world-1.2.war /var/lib/tomcat/webapps/"
+          }
+       
+    }
+    stage ('success'){
+            steps {
+                script {
+                    currentBuild.result = 'SUCCESS'
+                }
             }
         }
-      }
     }
- }
+
+    post {
+        failure {
+            script {
+                currentBuild.result = 'FAILURE'
+            }
+        }
+
+        always {
+            step([$class: 'Mailer',
+                notifyEveryUnstableBuild: true,
+                recipients: "gyan.csc@gmail.com,gyan.csc",
+                sendToIndividuals: true])
+        }
+    }
+}
