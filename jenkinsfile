@@ -10,7 +10,8 @@ pipeline {
       stage('Build') {
          steps {
             // Get some code from a GitHub repository
-            git branch: 'test', changelog: false, credentialsId: 'git_jms_cre', poll: false, url: 'https://github.com/gyandxc/spring3-mvc-maven-xml-hello-world.git'
+            //git branch: 'test', changelog: false, credentialsId: 'git_jms_cre', poll: false, url: 'https://github.com/gyandxc/spring3-mvc-maven-xml-hello-world.git'
+           git credentialsId: 'gyanid1IDgitdxc', url: 'https://github.com/gyandxc/spring3-mvc-maven-xml-hello-world.git'
             // Run Maven on a Unix agent.
             sh "mvn package"
 
