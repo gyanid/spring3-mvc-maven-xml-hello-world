@@ -28,7 +28,7 @@ pipeline {
       }
       stage('deploy'){
           steps {
-              sh "sudo cp /var/lib/jenkins/workspace/tomcat_deploy_pipeline/target/spring3-mvc-maven-xml-hello-world-1.2.war /var/lib/tomcat/webapps/"
+              sh "sudo cp /var/lib/jenkins/workspace/tomcat_deploy_pipeline/target/spring3-mvc-maven-xml-hello-world-3.0.war /var/lib/tomcat/webapps/"
           }
        
     }
