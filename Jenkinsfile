@@ -26,7 +26,7 @@ pipeline{
       stage('deploy'){
         steps{
             withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential_ID', variable: 'tomcatcred')]) {
-                sh "curl -v -u ${tomcatcred} -T /var/lib/jenkins/workspace/tomcat_deploy_pipeline/target/spring3-mvc-maven-xml-hello-world-3.0-SNAPSHOT.war 'http://ec2-65-1-106-109.ap-south-1.compute.amazonaws.com:8081/manager/text/deploy?path=/pipeline_gyanh&update=true'"
+                sh "curl -v -u ${tomcatcred} -T /var/lib/jenkins/workspace/tomcat_deploy_pipeline/target/spring3-mvc-maven-xml-hello-world-3.0-SNAPSHOT.war 'http://ec2-65-1-106-109.ap-south-1.compute.amazonaws.com:8081/manager/text/deploy?path=/pipeline_gyanhdh&update=true'"
             }
         }
       }
