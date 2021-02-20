@@ -31,4 +31,20 @@ pipeline{
         }
       }
     }
+   post {
+        failure {
+            script {
+                currentBuild.result = 'FAILURE'
+            }
+        }
+
+        always {
+            step([$class: 'Mailer',
+                notifyEveryUnstableBuild: true,
+                recipients: "gyan.csc@gmail.com,gyan.csc",
+                sendToIndividuals: true])
+        }
+    }
+
+
  }
